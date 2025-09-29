@@ -98,10 +98,15 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
     const modalID = data.custom_id;
 
     if (modalID === "bobFlip") {
-      let inputString = ['',''];
+      let inputString = [];
       for (let inputs of data.components) {
         inputString.push(inputs.components[0].value);
       }
+      for (let string of inputString) {
+        console.log(string);
+      }
+      console.log(inputString.length)
+
 
       return res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
