@@ -8,8 +8,7 @@ import {
   MessageComponentTypes,
   verifyKeyMiddleware,
 } from 'discord-interactions';
-import { getRandomEmoji, DiscordRequest } from './utils.js';
-import { getShuffledOptions, getResult } from './game.js';
+import { getRandomEmoji, DiscordRequest, getHeadTail} from './utils.js';
 
 // Create an express app
 const app = express();
@@ -51,15 +50,66 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
             {
               type: MessageComponentTypes.TEXT_DISPLAY,
               // Fetches a random emoji to send from a helper function
-              content: `hello world ${getRandomEmoji()}`
+              content: `hello world2 ${getRandomEmoji()}`
             }
           ]
         },
       });
     }
 
+    if (name === 'coinflip') {
+      return res.send({
+        type: InteractionResponseType.MODAL,
+        data: {
+          custom_id: 'bobFlip',
+          title: 'PICK RN',
+          components: [
+            {
+              type: MessageComponentTypes.ACTION_ROW,
+              components: [
+                {
+                  type: MessageComponentTypes.INPUT_TEXT,
+                  style: 1,
+                  label: 'Heads option',
+                  custom_id: 'tail',
+                }
+              ]
+            }, {
+              type: MessageComponentTypes.ACTION_ROW,
+              components: [
+                {
+                  type: MessageComponentTypes.INPUT_TEXT,
+                  style: 1,
+                  label: 'Tails option',
+                  custom_id: 'head',
+                }
+              ]
+            }
+          ]
+        }
+      })
+    }
+
     console.error(`unknown command: ${name}`);
     return res.status(400).json({ error: 'unknown command' });
+  }
+
+  if (type === InteractionType.MODAL_SUBMIT) {
+    const modalID = data.custom_id;
+
+    if (modalID === "bobFlip") {
+      let inputString = ['',''];
+      for (let inputs of data.components) {
+        inputString.push(inputs.components[0].value);
+      }
+
+      return res.send({
+        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+        data: {
+          content: `${getHeadTail(inputString)} wins`
+        }
+      });
+    }
   }
 
   console.error('unknown interaction type', type);
