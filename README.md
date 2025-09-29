@@ -1,0 +1,2 @@
+# SkebobBot
+Discord bot Skebob
