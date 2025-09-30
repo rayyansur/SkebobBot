@@ -14,6 +14,16 @@ const COINFLIP = {
     name: 'coinflip',
     description: 'Skebob flips coins',
     type: 1,
+    options: [
+        {
+            name: "amount",
+            description: "From 2 to 5",
+            type: 4,
+            required: false,
+            min_value: 2,
+            max_value: 5
+        }
+    ]
 }
 
 const ALL_COMMANDS = [TEST_COMMAND, COINFLIP];

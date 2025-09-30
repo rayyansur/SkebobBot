@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import {MessageComponentTypes} from 'discord-interactions';
 
 export async function DiscordRequest(endpoint, options) {
     // append endpoint to root API URL
@@ -48,4 +49,11 @@ export function getHeadTail(strArr) {
 
 export function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export function makesRow(component) {
+    return {
+        type: MessageComponentTypes.ACTION_ROW,
+        components: [component]
+    };
 }
