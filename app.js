@@ -8,7 +8,7 @@ import {
     MessageComponentTypes,
     verifyKeyMiddleware,
 } from 'discord-interactions';
-import { getRandomEmoji, DiscordRequest, getHeadTail} from './utils.js';
+import {getRandomEmoji, DiscordRequest, getHeadTail, makesRow} from './utils.js';
 
 // Create an express app
 const app = express();
@@ -23,7 +23,7 @@ const activeGames = {};
  */
 app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async function (req, res) {
     // Interaction id, type and data
-    const { id, type, data } = req.body;
+    const { id, type, data, options} = req.body;
 
     /**
      * Handle verification requests
@@ -58,36 +58,31 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
         }
 
         if (name === 'coinflip') {
+
+            let rowArr = [];
+            const amount = data.options?.[0]?.value ?? 2; // default 2
+
+            for (let i = 0; i < amount; i++) {
+                rowArr.push(makesRow(
+                    {
+                        type: MessageComponentTypes.INPUT_TEXT,
+                        style: 1,
+                        label: 'Option: ' + (i + 1),
+                        custom_id: i,
+                    }
+                ));
+            }
             return res.send({
                 type: InteractionResponseType.MODAL,
                 data: {
                     custom_id: 'bobFlip',
                     title: 'PICK RN',
-                    components: [
-                        {
-                            type: MessageComponentTypes.ACTION_ROW,
-                            components: [
-                                {
-                                    type: MessageComponentTypes.INPUT_TEXT,
-                                    style: 1,
-                                    label: 'Heads option',
-                                    custom_id: 'tail',
-                                }
-                            ]
-                        }, {
-                            type: MessageComponentTypes.ACTION_ROW,
-                            components: [
-                                {
-                                    type: MessageComponentTypes.INPUT_TEXT,
-                                    style: 1,
-                                    label: 'Tails option',
-                                    custom_id: 'head',
-                                }
-                            ]
-                        }
-                    ]
+                    components: rowArr
+
                 }
+
             })
+
         }
 
         console.error(`unknown command: ${name}`);
