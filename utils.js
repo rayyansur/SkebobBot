@@ -57,3 +57,18 @@ export function makesRow(component) {
         components: [component]
     };
 }
+
+export function chooseFromList(str, num) {
+    console.log(str, num)
+
+    str = str.toLowerCase();
+    str = str.replaceAll("aryen", "gujarat iyer");
+
+    let arr = str.split(",").map(x => x.trim());
+
+    while (num < arr.length && arr.length !== 0) {
+        arr.pop(Math.floor(Math.random() * arr.length));
+    }
+
+    return arr;
+}

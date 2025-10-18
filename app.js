@@ -8,7 +8,7 @@ import {
     MessageComponentTypes,
     verifyKeyMiddleware,
 } from 'discord-interactions';
-import {getRandomEmoji, DiscordRequest, getHeadTail, makesRow} from './utils.js';
+import {getRandomEmoji, DiscordRequest, getHeadTail, makesRow, chooseFromList} from './utils.js';
 
 // Create an express app
 const app = express();
@@ -50,7 +50,7 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
                         {
                             type: MessageComponentTypes.TEXT_DISPLAY,
                             // Fetches a random emoji to send from a helper function
-                            content: `hello world2 ${getRandomEmoji()}`
+                            content: `Sup Basileus ${getRandomEmoji()}`
                         }
                     ]
                 },
@@ -74,7 +74,7 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
             }
             return res.send({
                 type: InteractionResponseType.MODAL,
-                data: {
+                 data: {
                     custom_id: 'bobFlip',
                     title: 'PICK RN',
                     components: rowArr
@@ -84,6 +84,22 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
             })
 
         }
+
+        if (name === 'sacrifice') {
+            return res.send({
+                type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                data: {
+                    flags: InteractionResponseFlags.IS_COMPONENTS_V2,
+                    components: [
+                        {
+                            type: MessageComponentTypes.TEXT_DISPLAY,
+                            content: `Winners are: ${chooseFromList(data.options?.[0].value, data.options?.[1].value)}`
+                        }
+                    ]
+                }
+            })
+        }
+
 
         console.error(`unknown command: ${name}`);
         return res.status(400).json({ error: 'unknown command' });

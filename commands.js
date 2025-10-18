@@ -26,6 +26,27 @@ const COINFLIP = {
     ]
 }
 
-const ALL_COMMANDS = [TEST_COMMAND, COINFLIP];
+const SACRIFICE = {
+    name: 'sacrifice',
+    description: 'Sacrifices some and returns a certain number of people from input list',
+    type: 1,
+    options: [
+        {
+            name: "list",
+            description: "comma seperated list of names",
+            type: 3,
+            required: true,
+        },
+        {
+            name: "number",
+            description: "number of people to pick from list",
+            type: 4,
+            required: true,
+            min_value: 1
+        }
+    ]
+};
+
+const ALL_COMMANDS = [TEST_COMMAND, COINFLIP, SACRIFICE];
 
 InstallGlobalCommands(process.env.APP_ID, ALL_COMMANDS);
