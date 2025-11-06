@@ -8,7 +8,7 @@ import {
     MessageComponentTypes,
     verifyKeyMiddleware,
 } from 'discord-interactions';
-import {getRandomEmoji, DiscordRequest, getHeadTail, makesRow, chooseFromList} from './utils.js';
+import {getRandomEmoji, DiscordRequest, getHeadTail, makesRow, chooseFromList, getResultInsert} from './utils.js';
 
 // Create an express app
 const app = express();
@@ -94,6 +94,21 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
                         {
                             type: MessageComponentTypes.TEXT_DISPLAY,
                             content: `Winners are: ${chooseFromList(data.options?.[0].value, data.options?.[1].value)}`
+                        }
+                    ]
+                }
+            })
+        }
+
+        if (name === 'save_idea') {
+            return res.send({
+                type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                data: {
+                    flags: InteractionResponseFlags.IS_COMPONENTS_V2,
+                    components: [
+                        {
+                            type: MessageComponentTypes.TEXT_DISPLAY,
+                            content: `Results ${await getResultInsert(data.options?.[0].value, data.options?.[1].value)}`
                         }
                     ]
                 }

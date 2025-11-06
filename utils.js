@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import {MessageComponentTypes} from 'discord-interactions';
+import {con} from './db_connection.js';
 
 export async function DiscordRequest(endpoint, options) {
     // append endpoint to root API URL
@@ -71,4 +72,25 @@ export function chooseFromList(str, num) {
     }
 
     return arr;
+}
+
+export function getResultInsert(name, desc) {
+
+    return new Promise((resolve, reject) => {
+        con.connect(function (err) {
+            if (err) {
+                reject("failed, contact hydronoob");
+            }
+            let sql = "INSERT INTO ideas (name, description) VALUES ?";
+            let values = [[name, desc]];
+
+            con.query(sql, [values], function (err, result) {
+                if (!err) {
+                    resolve("inserted");
+                } else {
+                    reject("failed, contact hydronoob");
+                }
+            });
+        });
+    });
 }

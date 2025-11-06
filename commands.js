@@ -47,6 +47,46 @@ const SACRIFICE = {
     ]
 };
 
-const ALL_COMMANDS = [TEST_COMMAND, COINFLIP, SACRIFICE];
+const SAVE_IDEA = {
+    name: 'save_idea',
+    description: 'Input an idea name and it\'s description',
+    type: 1,
+    options: [
+        {
+            name: "name",
+            description: "idea name",
+            type: 3,
+            required: true,
+        },
+        {
+            name: "desc",
+            description: "description of idea",
+            type: 3,
+            required: true,
+        }
+    ]
+}
+
+const FETCH_IDEA = {
+    name: 'fetch_idea',
+    description: 'Fetch an idea\'s description from it\'s name',
+    type: 1,
+    options: [
+        {
+            name: "name",
+            description: "name of idea",
+            type: 3,
+            required: true
+        }
+    ]
+}
+
+const ALL_IDEAS = {
+    name: 'all_ideas',
+    description: 'returns all the names of the saved ideas',
+    type: 1
+}
+
+const ALL_COMMANDS = [TEST_COMMAND, COINFLIP, SACRIFICE, SAVE_IDEA, FETCH_IDEA, ALL_IDEAS];
 
 InstallGlobalCommands(process.env.APP_ID, ALL_COMMANDS);
